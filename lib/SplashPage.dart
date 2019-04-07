@@ -1,18 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+
+// import 'package:flutter/services.dart';
+
+
 import 'dart:async';
 
 class SplashPage extends StatefulWidget {
   SplashPage({Key key, this.title}) : super(key: key);
   final String title;
+
   @override
   _SplashPageState createState() => _SplashPageState();
 }
 
 class _SplashPageState extends State<SplashPage> {
+  var loadingText = 'Loading...';
+  final double latitude = 0;
+  final double longitude = 0;
+
+  void getLocation() async {
+    setState(() {
+      loadingText = 'Getting location...';
+    });
+
+    Position position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    debugPrint(position.latitude.toString());
+  }
+
   @override
   void initState() {
     super.initState();
-    // Timer(Duration(seconds: 5), () => MyNavigator.goToIntro(context));
+    Timer(Duration(seconds: 5), () => {getLocation()});
   }
 
   @override
@@ -42,15 +61,25 @@ class _SplashPageState extends State<SplashPage> {
                 "FluWeather",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24.0
-                ),
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24.0),
               ),
               Padding(
-                padding: EdgeInsets.only(top: 50.0),
+                padding: EdgeInsets.only(top: 150.0),
               ),
               CircularProgressIndicator(),
+              Padding(
+                padding: EdgeInsets.only(top: 20.0),
+              ),
+              Text(
+                "$loadingText",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12.0),
+              ),
             ],
           )
         ],
