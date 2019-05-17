@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
-// import 'package:flutter/services.dart';
 
+// import 'package:flutter/services.dart';
 
 import 'dart:async';
 
@@ -15,7 +15,7 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
-  var loadingText = 'Loading...';
+  String loadingText = 'Loading...';
   final double latitude = 0;
   final double longitude = 0;
 
@@ -24,9 +24,34 @@ class _SplashPageState extends State<SplashPage> {
       loadingText = 'Getting location...';
     });
 
-    Position position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-    debugPrint(position.latitude.toString());
+    try {
+      Position position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      debugPrint(position.latitude.toString());
+    } catch (e) {
+      await _ackAlert(this.context); 
+
+    }
   }
+
+  Future<void> _ackAlert(BuildContext context) {
+  return showDialog<void>(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Location Required!'),
+        content: const Text('This app needs your location to get your forecas'),
+        actions: <Widget>[
+          FlatButton(
+            child: Text('Ok'),
+            onPressed: () {
+               
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
 
   @override
   void initState() {
