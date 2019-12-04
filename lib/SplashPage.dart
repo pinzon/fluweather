@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
+import 'MyNavigator.dart';
 
 // import 'package:flutter/services.dart';
 
@@ -25,33 +26,46 @@ class _SplashPageState extends State<SplashPage> {
     });
 
     try {
-      Position position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      Position position = await Geolocator()
+          .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
       debugPrint(position.latitude.toString());
     } catch (e) {
-      await _ackAlert(this.context); 
-
+      await _ackAlert(this.context);
     }
   }
 
   Future<void> _ackAlert(BuildContext context) {
-  return showDialog<void>(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text('Location Required!'),
-        content: const Text('This app needs your location to get your forecas'),
-        actions: <Widget>[
-          FlatButton(
-            child: Text('Ok'),
-            onPressed: () {
-               
-            },
-          ),
-        ],
-      );
-    },
-  );
-}
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Location Required!'),
+          content:
+              const Text('This app needs your location to get your forecast'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('CLOSE APP'),
+              onPressed: () {
+                MyNavigator.closeApp(context);
+                debugPrint('Pressed Cancel');
+              },
+            ),
+            RaisedButton(
+              child: Text(
+                'OK',
+                style: TextStyle(color: Colors.white),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+                getLocation();
+                debugPrint('TRY AGAIN');
+              },
+            )
+          ],
+        );
+      },
+    );
+  }
 
   @override
   void initState() {

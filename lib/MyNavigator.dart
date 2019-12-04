@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'dart:io' show Platform;
 
 class MyNavigator {
   static void goToHome(BuildContext context) {
@@ -10,6 +12,10 @@ class MyNavigator {
   }
 
   static void closeApp(BuildContext context) {
-    // exit(0);
+    if (Platform.isAndroid) {
+      SystemNavigator.pop();
+    } else if (Platform.isIOS) {
+      // exit(0);
+    }
   }
 }
