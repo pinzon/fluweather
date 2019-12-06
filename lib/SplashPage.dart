@@ -1,5 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'MyNavigator.dart';
 
@@ -16,19 +18,57 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
+  SharedPreferences preferences;
   String loadingText = 'Loading...';
-  final double latitude = 0;
-  final double longitude = 0;
+  double latitude = 0;
+  double longitude = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    getLocation();
+    MyNavigator.goToHome(this.context);
+  }
 
   void getLocation() async {
     setState(() {
       loadingText = 'Getting location...';
     });
 
+    preferences = await SharedPreferences.getInstance();
+    if (preferences.containsKey('latitude') && preferences.containsKey('longitude')) {
+      await getSavedLocation();
+    } else {
+      await getCurrentLocation();
+    }
+
+    await saveLocation();
+  }
+
+  Future<void> saveLocation() async {
+    await preferences.setDouble('latitude', this.latitude);
+    await preferences.setDouble('longitude', this.longitude);
+  }
+
+  Future<void> getSavedLocation() async {
+    try {
+      this.latitude = preferences.getDouble('latitude');
+      this.longitude = preferences.getDouble('longitude');
+      debugPrintThrottled(
+          'Saved locations is ${this.latitude} : ${this.longitude}');
+    } catch (e) {
+      //if saved data is not double
+      await getCurrentLocation();
+    }
+  }
+
+  Future<void> getCurrentLocation() async {
     try {
       Position position = await Geolocator()
           .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-      debugPrint(position.latitude.toString());
+
+      this.latitude = position.latitude;
+      this.longitude = position.longitude;
     } catch (e) {
       await _ackAlert(this.context);
     }
@@ -46,7 +86,7 @@ class _SplashPageState extends State<SplashPage> {
             FlatButton(
               child: Text('CLOSE APP'),
               onPressed: () {
-                MyNavigator.closeApp(context);
+                MyNavigator.closeApp();
                 debugPrint('Pressed Cancel');
               },
             ),
@@ -65,12 +105,6 @@ class _SplashPageState extends State<SplashPage> {
         );
       },
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    Timer(Duration(seconds: 5), () => {getLocation()});
   }
 
   @override
