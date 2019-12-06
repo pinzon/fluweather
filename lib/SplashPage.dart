@@ -27,7 +27,7 @@ class _SplashPageState extends State<SplashPage> {
   void initState() {
     super.initState();
     getLocation();
-    MyNavigator.goToHome(this.context);
+    // MyNavigator.goToHome(this.context);
   }
 
   void getLocation() async {
