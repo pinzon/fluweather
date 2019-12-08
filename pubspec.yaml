@@ -25,6 +25,7 @@ dependencies:
   cupertino_icons: ^0.1.2
   geolocator: ^3.0.1
   shared_preferences: ^0.5.4+8
+  splashscreen:
 
 dev_dependencies:
   flutter_test:
@@ -36,7 +37,8 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
-
+  assets:
+    - assets/
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
