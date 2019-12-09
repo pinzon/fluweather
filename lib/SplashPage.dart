@@ -21,7 +21,7 @@ class _SplashState extends State<Splash> {
   @override
   Widget build(BuildContext context) {
     return new SplashScreen(
-        seconds: 50,
+        seconds: 3,
         navigateAfterSeconds: new Home(),
         title: new Text(
           'FWeather',
