@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'widgets/WeaderWidget.dart';
+import '../widget/WeaderWidget.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -18,7 +18,7 @@ class _HomeState extends State<Home> {
     children: <Widget>[Center(child: CircularProgressIndicator())],
   );
   String loadingText = 'Loading...';
-  String city = 'FWeather';
+  String city = 'FWeather...';
   double latitude = 0;
   double longitude = 0;
 
